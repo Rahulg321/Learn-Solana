@@ -1,0 +1,16 @@
+{
+  "name": "client-frontend",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@solana-developers/helpers": "^2.8.1",
+    "@solana/web3.js": "1"
+  }
+}
