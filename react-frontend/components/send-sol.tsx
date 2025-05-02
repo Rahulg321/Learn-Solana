@@ -50,7 +50,7 @@ const SendSol = () => {
   };
 
   return (
-    <div>
+    <div className="">
       <h4>Send Sol</h4>
 
       <input
