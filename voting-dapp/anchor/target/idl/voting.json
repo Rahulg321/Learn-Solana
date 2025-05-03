@@ -1,5 +1,5 @@
 {
-  "address": "FqzkXZdwYjurnUKetJCAvaUw5WAqbwzU6gZEwydeEfqS",
+  "address": "C2gRbFhJNAeT3AdqBSkcZW9NUMh1vrCE9Y1qPjqQLNRH",
   "metadata": {
     "name": "voting",
     "version": "0.1.0",
@@ -81,6 +81,7 @@
         },
         {
           "name": "poll",
+          "writable": true,
           "pda": {
             "seeds": [
               {
@@ -117,7 +118,63 @@
           "type": "string"
         },
         {
-          "name": "poll_id",
+          "name": "_poll_id",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "vote",
+      "discriminator": [
+        227,
+        110,
+        155,
+        23,
+        136,
+        126,
+        172,
+        25
+      ],
+      "accounts": [
+        {
+          "name": "signer",
+          "signer": true
+        },
+        {
+          "name": "poll",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "arg",
+                "path": "poll_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "candidate",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "arg",
+                "path": "poll_id"
+              },
+              {
+                "kind": "arg",
+                "path": "candidate_name"
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "_candidate_name",
+          "type": "string"
+        },
+        {
+          "name": "_poll_id",
           "type": "u64"
         }
       ]
@@ -158,11 +215,11 @@
         "kind": "struct",
         "fields": [
           {
-            "name": "canidate_name",
+            "name": "candidate_name",
             "type": "string"
           },
           {
-            "name": "canidate_votes",
+            "name": "candidate_votes",
             "type": "u64"
           }
         ]

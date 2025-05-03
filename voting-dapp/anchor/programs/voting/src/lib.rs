@@ -2,7 +2,7 @@
 
 use anchor_lang::prelude::*;
 
-declare_id!("FqzkXZdwYjurnUKetJCAvaUw5WAqbwzU6gZEwydeEfqS");
+declare_id!("C2gRbFhJNAeT3AdqBSkcZW9NUMh1vrCE9Y1qPjqQLNRH");
 
 #[program]
 pub mod voting {
@@ -29,22 +29,58 @@ pub mod voting {
     pub fn intialize_candidate(
         ctx: Context<InitializeCandidate>,
         candidate_name: String,
-        poll_id: u64,
+        _poll_id: u64,
     ) -> Result<()> {
         let candidate = &mut ctx.accounts.candidate;
-        candidate.canidate_name = candidate_name;
-        candidate.canidate_votes = 0;
+        candidate.candidate_name = candidate_name;
+        candidate.candidate_votes = 0;
 
+        let poll = &mut ctx.accounts.poll;
+        poll.candidate_amount += 1;
+
+        Ok(())
+    }
+
+    // instruction handler to actually vote for a candidate
+    pub fn vote(ctx: Context<Vote>, _candidate_name: String, _poll_id: u64) -> Result<()> {
+        let candidate = &mut ctx.accounts.candidate;
+        candidate.candidate_votes += 1;
         Ok(())
     }
 }
 
 #[derive(Accounts)]
 #[instruction(candidate_name:String, poll_id:u64)]
+pub struct Vote<'info> {
+    pub signer: Signer<'info>,
+
+    // we are just referencing the poll account here
+    #[account(
+        seeds = [poll_id.to_le_bytes().as_ref()],
+        bump
+    )]
+    pub poll: Account<'info, Poll>,
+
+    // whenever we take a reference of an account we have to specify whether we want it to be mutable or not
+    #[account(
+        mut,
+        // this will be used to create public derived address
+        seeds = [poll_id.to_le_bytes().as_ref(), candidate_name.as_bytes()],
+        bump
+    )]
+    pub candidate: Account<'info, Candidate>,
+}
+
+#[derive(Accounts)]
+#[instruction(candidate_name:String, poll_id:u64)]
 pub struct InitializeCandidate<'info> {
+    // the person who signs the transaction
     #[account(mut)]
     pub signer: Signer<'info>,
+
+    // we are just referencing the poll account here
     #[account(
+        mut,
         seeds = [poll_id.to_le_bytes().as_ref()],
         bump
     )]
@@ -53,7 +89,7 @@ pub struct InitializeCandidate<'info> {
     #[account(
         init,
         payer = signer,
-        space = 8  + Poll::INIT_SPACE,
+        space = 8  + Candidate::INIT_SPACE,
         // this will be used to create public derived address
         seeds = [poll_id.to_le_bytes().as_ref(), candidate_name.as_bytes()],
         bump
@@ -67,8 +103,8 @@ pub struct InitializeCandidate<'info> {
 #[derive(InitSpace)]
 pub struct Candidate {
     #[max_len(32)]
-    pub canidate_name: String,
-    pub canidate_votes: u64,
+    pub candidate_name: String,
+    pub candidate_votes: u64,
 }
 
 #[derive(Accounts)]

@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/voting.json`.
  */
 export type Voting = {
-  "address": "FqzkXZdwYjurnUKetJCAvaUw5WAqbwzU6gZEwydeEfqS",
+  "address": "C2gRbFhJNAeT3AdqBSkcZW9NUMh1vrCE9Y1qPjqQLNRH",
   "metadata": {
     "name": "voting",
     "version": "0.1.0",
@@ -87,6 +87,7 @@ export type Voting = {
         },
         {
           "name": "poll",
+          "writable": true,
           "pda": {
             "seeds": [
               {
@@ -115,6 +116,62 @@ export type Voting = {
         {
           "name": "systemProgram",
           "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "candidateName",
+          "type": "string"
+        },
+        {
+          "name": "pollId",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "vote",
+      "discriminator": [
+        227,
+        110,
+        155,
+        23,
+        136,
+        126,
+        172,
+        25
+      ],
+      "accounts": [
+        {
+          "name": "signer",
+          "signer": true
+        },
+        {
+          "name": "poll",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "arg",
+                "path": "pollId"
+              }
+            ]
+          }
+        },
+        {
+          "name": "candidate",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "arg",
+                "path": "pollId"
+              },
+              {
+                "kind": "arg",
+                "path": "candidateName"
+              }
+            ]
+          }
         }
       ],
       "args": [
@@ -164,11 +221,11 @@ export type Voting = {
         "kind": "struct",
         "fields": [
           {
-            "name": "canidateName",
+            "name": "candidateName",
             "type": "string"
           },
           {
-            "name": "canidateVotes",
+            "name": "candidateVotes",
             "type": "u64"
           }
         ]
