@@ -2,7 +2,7 @@
 
 use anchor_lang::prelude::*;
 
-declare_id!("C2gRbFhJNAeT3AdqBSkcZW9NUMh1vrCE9Y1qPjqQLNRH");
+declare_id!("FqzkXZdwYjurnUKetJCAvaUw5WAqbwzU6gZEwydeEfqS");
 
 #[program]
 pub mod voting {
@@ -61,7 +61,8 @@ pub struct Vote<'info> {
     )]
     pub poll: Account<'info, Poll>,
 
-    // whenever we take a reference of an account we have to specify whether we want it to be mutable or not
+
+    // whenever we take a reference of an account we have to specify whether we want it to be mutable or
     #[account(
         mut,
         // this will be used to create public derived address

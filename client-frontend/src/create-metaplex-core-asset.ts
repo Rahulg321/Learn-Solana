@@ -21,6 +21,8 @@ import { clusterApiUrl, Connection, LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { promises as fs } from "fs";
 import * as path from "path";
 
+// this is used to create an NFT
+
 // create a new connection to Solana's devnet cluster
 const connection = new Connection(clusterApiUrl("devnet"));
 
@@ -95,7 +97,7 @@ const asset = generateSigner(umi);
 await create(umi, {
   asset,
   collection,
-  name: "Jubreakit Jubutit",
+  name: "Some Token",
   uri,
 }).sendAndConfirm(umi, { send: { commitment: "finalized" } });
 
